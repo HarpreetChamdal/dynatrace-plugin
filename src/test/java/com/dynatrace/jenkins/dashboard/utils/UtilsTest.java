@@ -5,6 +5,7 @@ import com.dynatrace.jenkins.dashboard.model_2_0_0.*;
 import com.google.common.collect.Lists;
 import hudson.model.AbstractBuild;
 import hudson.model.ParameterValue;
+import hudson.model.Run;
 import hudson.model.StringParameterValue;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -51,7 +52,8 @@ public class UtilsTest {
 
 	@Test
 	public void updateBuildVariables_NoVariableBefore_Test() {
-		AbstractBuild build = mock(AbstractBuild.class);
+		//AbstractBuild build = mock(AbstractBuild.class);
+		Run build = mock(Run.class);
 		when(build.getAction(DynatraceVariablesAction.class)).thenReturn(null);
 
 		List<ParameterValue> parameters = new ArrayList<>();

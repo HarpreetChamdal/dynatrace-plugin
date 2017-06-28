@@ -67,12 +67,20 @@ public class DynatraceVariablesAction extends ParametersAction {
 	public static final class DynatraceVariablesEnvironmentContributor extends EnvironmentContributor {
 		@Override
 		public void buildEnvironmentFor(Run r, EnvVars vars, TaskListener listener) {
+			System.out.println("Executed DynatraceBuildVariablesContributor of EnvironmentContributor");
 			DynatraceVariablesAction a = r.getAction(DynatraceVariablesAction.class);
 			if (a == null) {
+				System.out.println("a is null::::");
 				return;
 			}
+			System.out.println("a is not null::::");
 			for (ParameterValue spv : a.getParameters()) {
+				System.out.println("inside for loop::::");
+				System.out.println("ENV KEY:"+spv.getName());
+				System.out.println("ENV VALUE:"+String.valueOf(spv.getValue()));
+				//vars.put(spv.getName(), String.valueOf(spv.getValue()));
 				vars.put(spv.getName(), String.valueOf(spv.getValue()));
+				System.out.println("printing value from env variable::::"+vars.get(spv.getName()));
 			}
 		}
 	}

@@ -48,6 +48,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,7 +111,8 @@ public class TATestRunRegistrationBuildStep extends Builder {
 			Utils.updateBuildVariable(build, BuildVarKeys.BUILD_VAR_KEY_TEST_RUN_ID, testRun.getId());
 			updateTestRunIdsAction(build, testRun.getId());
 
-			logger.println("Registered test run with ID=" + testRun.getId());
+			logger.println("Registered test run with ID=" + testRun.getId());		
+			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

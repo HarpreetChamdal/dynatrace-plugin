@@ -38,6 +38,7 @@ import com.dynatrace.sdk.server.testautomation.models.TestRuns;
 import hudson.model.AbstractBuild;
 import hudson.model.ParameterValue;
 import hudson.model.Result;
+import hudson.model.Run;
 import hudson.model.StringParameterValue;
 import jenkins.model.GlobalConfiguration;
 
@@ -167,6 +168,19 @@ public final class Utils {
 		}
 		return true;
 	}
+	
+	public static boolean isValidBuild(Run build, PrintStream logger, String message) {
+		if (build.getResult() == Result.ABORTED) {
+			logger.println("Build has been aborted - " + message);
+			return false;
+		}
+		TABuildSetupStatusAction setupStatusAction = build.getAction(TABuildSetupStatusAction.class);
+		if (setupStatusAction != null && setupStatusAction.isSetupFailed()) {
+			logger.println("Failed to set up environment for Dynatrace AppMon Plugin - " + message);
+			return false;
+		}
+		return true;
+	}
 
 	public static void updateBuildVariables(AbstractBuild<?, ?> build, List<ParameterValue> parameters) {
 		DynatraceVariablesAction existingAction = build.getAction(DynatraceVariablesAction.class);
@@ -176,8 +190,21 @@ public final class Utils {
 			build.replaceAction(existingAction.createUpdated(parameters));
 		}
 	}
+	
+	public static void updateBuildVariables(Run<?, ?> build, List<ParameterValue> parameters) {
+		DynatraceVariablesAction existingAction = build.getAction(DynatraceVariablesAction.class);
+		if (existingAction == null) {
+			build.addAction(new DynatraceVariablesAction(parameters)); 
+		} else {
+			build.replaceAction(existingAction.createUpdated(parameters));
+		}
+	}
 
 	public static void updateBuildVariable(AbstractBuild<?, ?> build, String key, String value) {
+		updateBuildVariables(build, Collections.<ParameterValue>singletonList(new StringParameterValue(key, value)));
+	}
+	
+	public static void updateBuildVariable(Run<?, ?> build, String key, String value) {
 		updateBuildVariables(build, Collections.<ParameterValue>singletonList(new StringParameterValue(key, value)));
 	}
 }

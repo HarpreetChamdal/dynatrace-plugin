@@ -34,6 +34,7 @@ import com.dynatrace.jenkins.dashboard.rest.ServerRestURIManager;
 import com.dynatrace.jenkins.dashboard.utils.Utils;
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
+import hudson.model.Run;
 import jenkins.model.GlobalConfiguration;
 import org.kohsuke.stapler.StaplerProxy;
 
@@ -48,6 +49,7 @@ public class TAReportingBuildAction_2_0_0 implements Action, StaplerProxy {
 	private static final String URL_NAME = "dynatrace-test-result";
 
 	private final AbstractBuild<?, ?> build;
+	private final Run<?, ?> buildRun;
 	private final String storedSessionName;
 	private final TAReport currentReport;
 	private transient TAReport previousReport;
@@ -56,6 +58,14 @@ public class TAReportingBuildAction_2_0_0 implements Action, StaplerProxy {
 		this.build = build;
 		this.storedSessionName = storedSessionName;
 		this.currentReport = report;
+		this.buildRun = null;
+	}
+	
+	public TAReportingBuildAction_2_0_0(Run<?, ?> build, String storedSessionName, TAReport report) {
+		this.buildRun = build;
+		this.storedSessionName = storedSessionName;
+		this.currentReport = report;
+		this.build = null;
 	}
 
 	@Override

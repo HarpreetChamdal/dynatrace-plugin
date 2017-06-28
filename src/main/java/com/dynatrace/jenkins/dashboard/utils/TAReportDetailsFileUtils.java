@@ -31,6 +31,7 @@ package com.dynatrace.jenkins.dashboard.utils;
 
 import com.dynatrace.jenkins.dashboard.model_2_0_0.TAReportDetails;
 import hudson.model.AbstractBuild;
+import hudson.model.Run;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -46,6 +47,14 @@ public class TAReportDetailsFileUtils {
 	private static final String TA_REPORT_DETAILS_FILENAME = "dtTestResult.xml";
 
 	public static void persistReportDetails(AbstractBuild<?,?> build, TAReportDetails reportDetails) throws JAXBException {
+		final File file = new File(build.getRootDir(), TA_REPORT_DETAILS_FILENAME);
+		final JAXBContext jaxbContext = JAXBContext.newInstance(TAReportDetails.class);
+		final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+		jaxbMarshaller.marshal(reportDetails, file);
+	}
+	
+	public static void persistReportDetails(Run<?,?> build, TAReportDetails reportDetails) throws JAXBException {
 		final File file = new File(build.getRootDir(), TA_REPORT_DETAILS_FILENAME);
 		final JAXBContext jaxbContext = JAXBContext.newInstance(TAReportDetails.class);
 		final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
